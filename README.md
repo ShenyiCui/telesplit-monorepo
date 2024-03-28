@@ -4,19 +4,28 @@ Welcome to the Telesplit Monorepo! This repository contains all the code for the
 
 ## Getting Started
 
-Install `pnpm` and `rush` globally:
+**Prerequisites: NodeJS LTS v20.11.1**
+
+1. Install nvm on your machine
+2. run `nvm install v20.11.1`
+3. run `nvm use`
+
+**Prerequisites: `pnpm` and `rush` package manager**
+
+4. Install `pnpm` and `rush` globally:
 
 ```bash
 npm install -g pnpm @microsoft/rush
 ```
 
-Install the dependencies:
+5. Install the dependencies:
 
 ```bash
+nvm use
 rush update
 ```
 
-Adding a [new package](https://rushjs.io/pages/commands/rush_add/):
+6. Adding a [new package](https://rushjs.io/pages/commands/rush_add/):
 
 ```bash
 rush add -p <package-name>
