@@ -49,15 +49,15 @@ rush add -p <package-name>
 
 - Use [Gitmoji](https://gitmoji.dev/) to add emojis to your commit messages
 - Use the following format for your commit messages
-  - :sparkles: `feat(frontend): add new feature`
-  - :bug: `fix(backend): fix a bug`
-  - :recycle: `refactor(bot): refactor code`
-  - :art: `style(bot): change styling`
-  - :fire: `chore(frontend): remove unused code`
-  - :memo: `docs(frontend): update documentation`
-  - :package: `package(bot): update package`
-  - :rocket: `deploy(bot): deploy to production`
-  - :wastebasket: `waste(frontend): remove unused code`
+  - `feat(frontend): add new feature` :sparkles:
+  - `fix(backend): fix a bug` :bug:
+  - `refactor(bot): refactor code` :recycle:
+  - `style(bot): change styling` :art: 
+  - `chore(frontend): remove unused code` :fire:
+  - `docs(frontend): update documentation` :memo:
+  - `package(bot): update package` :package:
+  - `deploy(bot): deploy to production` :rocket:
+  - `waste(frontend): remove unused code` :wastebasket:
 
 ## Screenshots
 
