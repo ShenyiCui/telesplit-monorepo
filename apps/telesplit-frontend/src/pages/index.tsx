@@ -3,6 +3,7 @@ import { useQuery } from "@tanstack/react-query";
 import FriendsTab from "@frontend/src/components/friends-tab";
 import GroupsTab from "@frontend/src/components/groups-tab";
 import SkeletonLoader from "@frontend/src/components/skeleton-loader";
+import ActivityTab from "../components/activity-tab";
 
 const tabs = [{ name: "FRIENDS" }, { name: "GROUPS" }, { name: "ACTIVITY" }];
 
@@ -134,6 +135,7 @@ const Home = () => {
 
         {currentTab === "FRIENDS" && <FriendsTab />}
         {currentTab === "GROUPS" && <GroupsTab />}
+        {currentTab === "ACTIVITY" && <ActivityTab />}
       </div>
     </div>
   );
