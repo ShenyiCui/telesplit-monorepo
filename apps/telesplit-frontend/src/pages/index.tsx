@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
-import FriendsTab from "@/components/friends-tab";
-import GroupsTab from "@/components/groups-tab";
-import SkeletonLoader from "@/components/skeleton-loader";
+import FriendsTab from "@frontend/src/components/friends-tab";
+import GroupsTab from "@frontend/src/components/groups-tab";
+import SkeletonLoader from "@frontend/src/components/skeleton-loader";
 
 const tabs = [{ name: "FRIENDS" }, { name: "GROUPS" }, { name: "ACTIVITY" }];
 

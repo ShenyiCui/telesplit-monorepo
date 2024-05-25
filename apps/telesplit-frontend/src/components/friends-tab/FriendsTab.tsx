@@ -1,8 +1,8 @@
 import React, { useState } from "react";
 import { useQuery } from "@tanstack/react-query";
 
-import SkeletonLoader from "@/components/skeleton-loader/";
-import Select from "@/components/select";
+import SkeletonLoader from "@frontend/src/components/skeleton-loader";
+import Select from "@frontend/src/components/select";
 
 import { Bars3CenterLeftIcon, UsersIcon } from "@heroicons/react/16/solid";
 import { AdjustmentsHorizontalIcon } from "@heroicons/react/24/outline";
