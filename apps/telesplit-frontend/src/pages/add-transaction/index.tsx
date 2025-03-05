@@ -1,8 +1,19 @@
 import React, { useState } from "react";
 import { CheckCircleIcon } from "@heroicons/react/16/solid";
-import Modal from "@frontend/src/components/modal";
+import FilterSelect, {
+  FilterSelectOptionData,
+} from "@frontend/src/components/filter-select";
+import { allCurrencies } from "./currencies";
 
 const AddTransaction = () => {
+  const currencies: FilterSelectOptionData<string>[] = Object.keys(
+    allCurrencies
+  ).map((key) => ({
+    title: allCurrencies[key].name,
+    subtitle: allCurrencies[key].code,
+    value: allCurrencies[key].code,
+  }));
+
   const [open, setOpen] = useState(true);
 
   return (
@@ -86,28 +97,11 @@ const AddTransaction = () => {
         </button>
       </form>
 
-      <Modal isOpen={open} onClose={() => setOpen(false)}>
-        <div className="flex flex-col">
-          <div className="w-full">
-            <label
-              htmlFor="split-method"
-              className="block text-sm font-medium leading-6 text-gray-900"
-            >
-              Split Method
-            </label>
-            <select
-              id="split-method"
-              name="split-method"
-              className="mt-2 w-full block rounded-md border-0 py-1.5 pl-3 pr-10 text-gray-900 ring-1 ring-inset ring-gray-300"
-              defaultValue="Canada"
-            >
-              <option>United States</option>
-              <option>Canada</option>
-              <option>Mexico</option>
-            </select>
-          </div>
-        </div>
-      </Modal>
+      <FilterSelect
+        isOpen={open}
+        onClose={() => setOpen(false)}
+        data={currencies}
+      />
     </>
   );
 };
