@@ -17,7 +17,10 @@ function FilterSelectOption<T>({
   onSelected,
 }: FilterSelectOptionProps<T>) {
   return (
-    <li className="col-span-1 flex rounded-md shadow-sm">
+    <li
+      className="col-span-1 flex rounded-md shadow-sm"
+      onClick={() => onSelected?.(value)}
+    >
       <div className="flex flex-1 items-center justify-between truncate rounded-md border border-gray-200 bg-white">
         <div className="flex-1 truncate px-4 py-2 text-sm">
           <a className="font-medium text-gray-900 hover:text-gray-600">
@@ -27,7 +30,6 @@ function FilterSelectOption<T>({
         </div>
         <div className="flex-shrink-0 pr-2">
           <button
-            onClick={() => onSelected?.(value)}
             type="button"
             className="inline-flex h-8 w-8 items-center justify-center rounded-full bg-transparent bg-white text-gray-400 hover:text-gray-500 focus:outline-none focus:ring-2 focus:ring-indigo-500 focus:ring-offset-2"
           >

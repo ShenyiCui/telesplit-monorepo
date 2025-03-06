@@ -1,20 +1,41 @@
 import React, { useState } from "react";
+import NoSSR from "@frontend/src/components/no-ssr/NoSSR";
 import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import FilterSelect, {
   FilterSelectOptionData,
 } from "@frontend/src/components/filter-select";
 import { allCurrencies } from "./currencies";
+import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { useLocalStorage } from "usehooks-ts";
+
+const currencies: FilterSelectOptionData<string>[] = Object.keys(
+  allCurrencies
+).map((key) => ({
+  title: allCurrencies[key].name,
+  subtitle: allCurrencies[key].code,
+  value: allCurrencies[key].code,
+}));
 
 const AddTransaction = () => {
-  const currencies: FilterSelectOptionData<string>[] = Object.keys(
-    allCurrencies
-  ).map((key) => ({
-    title: allCurrencies[key].name,
-    subtitle: allCurrencies[key].code,
-    value: allCurrencies[key].code,
-  }));
+  const [currencyCode, setCurrencyCode, _] = useLocalStorage<string>(
+    "currency",
+    "SGD",
+    {
+      initializeWithValue: false,
+    }
+  );
 
-  const [open, setOpen] = useState(true);
+  const selectedCurrency =
+    currencies.find((c) => c.subtitle === currencyCode) || currencies[0];
+
+  const [isCurrencyFilterOpen, setIsCurrencyFilterOpen] = useState(false);
+  const setSelectedCurrency = (currencyCode: string) => {
+    const currency = currencies.find((c) => c.value === currencyCode);
+    if (currency) {
+      setCurrencyCode(currency.value);
+      setIsCurrencyFilterOpen(false);
+    }
+  };
 
   return (
     <>
@@ -67,24 +88,27 @@ const AddTransaction = () => {
           >
             Price
           </label>
-          <div className="relative mt-0.5 rounded-md shadow-sm">
-            <div className="pointer-events-none absolute inset-y-0 left-0 flex items-center pl-3">
-              <span className="text-gray-500 sm:text-sm">$</span>
+          <div className="flex">
+            <div className="-mr-px grid grow grid-cols-1 focus-within:relative">
+              <input
+                id="query"
+                name="query"
+                type="text"
+                placeholder="0.00"
+                className="col-start-1 row-start-1 pr-3 pl-10 block w-full rounded-l-md border-0 py-1.5 text-gray-900 shadow-sm ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
+              />
+              <BanknotesIcon
+                aria-hidden="true"
+                className="pointer-events-none col-start-1 row-start-1 ml-3 size-5 self-center text-gray-400 sm:size-4"
+              />
             </div>
-            <input
-              required
-              type="text"
-              name="price"
-              id="price"
-              className="block w-full rounded-md border-0 py-1.5 pl-7 pr-12 text-gray-900 ring-1 ring-inset ring-gray-300 placeholder:text-gray-400 focus:ring-2 focus:ring-inset focus:ring-indigo-600 sm:text-sm sm:leading-6"
-              placeholder="0.00"
-              aria-describedby="price-currency"
-            />
-            <div className="pointer-events-none absolute inset-y-0 right-0 flex items-center pr-3">
-              <span className="text-gray-500 sm:text-sm" id="price-currency">
-                SGD
-              </span>
-            </div>
+            <button
+              onClick={() => setIsCurrencyFilterOpen(true)}
+              type="button"
+              className="flex border shrink-0 items-center gap-x-1.5 rounded-r-md px-3 py-2 text-sm font-semibold text-gray-900 outline-1 -outline-offset-1 outline-gray-300 hover:bg-gray-50 focus:relative focus:outline-2 focus:-outline-offset-2 focus:outline-indigo-600"
+            >
+              {selectedCurrency.subtitle}
+            </button>
           </div>
         </div>
 
@@ -93,13 +117,13 @@ const AddTransaction = () => {
           className="w-full mt-5 inline-flex justify-center items-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
           Submit
-          <CheckCircleIcon className="-mr-0.5 h-5 w-5" aria-hidden="true" />
         </button>
       </form>
 
       <FilterSelect
-        isOpen={open}
-        onClose={() => setOpen(false)}
+        isOpen={isCurrencyFilterOpen}
+        onChange={setSelectedCurrency}
+        onClose={() => setIsCurrencyFilterOpen(false)}
         data={currencies}
       />
     </>
