@@ -4,7 +4,7 @@ import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import FilterSelect, {
   FilterSelectOptionData,
 } from "@frontend/src/components/filter-select";
-import { allCurrencies } from "./currencies";
+import { allCurrencies } from "../../../constants/currencies";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useLocalStorage } from "usehooks-ts";
 
