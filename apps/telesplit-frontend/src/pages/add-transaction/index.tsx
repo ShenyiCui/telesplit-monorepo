@@ -1,9 +1,8 @@
 import React, { useState } from "react";
-import NoSSR from "@frontend/src/components/no-ssr/NoSSR";
-import { CheckCircleIcon } from "@heroicons/react/16/solid";
 import FilterSelect, {
   FilterSelectOptionData,
 } from "@frontend/src/components/filter-select";
+import MultiSelect from "@frontend/src/components/multi-select";
 import { allCurrencies } from "../../../constants/currencies";
 import { BanknotesIcon } from "@heroicons/react/24/outline";
 import { useLocalStorage } from "usehooks-ts";
@@ -37,12 +36,39 @@ const AddTransaction = () => {
     }
   };
 
+  const [selectedCities, setSelectedCities] = useState<string[]>([]);
+
   return (
     <>
       <div className="flex items-center justify-center py-4 bg-greenBg">
         <h1 className="text-white text-xl	font-light">Add Transaction</h1>
       </div>
       <form className="w-full px-5 py-10">
+        <div className="mb-5">
+          <label
+            htmlFor="description"
+            className="block text-sm font-medium leading-6 text-gray-900"
+          >
+            Split with you and
+          </label>
+          <MultiSelect
+            options={[
+              "New York",
+              "Los Angeles",
+              "Chicago",
+              "Houston",
+              "Phoenix",
+              "Philadelphia",
+              "San Antonio",
+              "San Diego",
+              "Dallas",
+              "San Jose",
+            ]}
+            selectedItems={selectedCities}
+            onChange={setSelectedCities}
+            placeholder="Search friends or groups"
+          />
+        </div>
         <div className="mb-5">
           <label
             htmlFor="email"
