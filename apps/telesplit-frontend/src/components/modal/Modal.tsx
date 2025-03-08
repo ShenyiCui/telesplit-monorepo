@@ -7,8 +7,6 @@ import {
   TransitionChild,
 } from "@headlessui/react";
 
-import { CheckIcon } from "@heroicons/react/24/outline";
-
 interface ModalProps {
   children: React.ReactNode;
   isOpen: boolean;
