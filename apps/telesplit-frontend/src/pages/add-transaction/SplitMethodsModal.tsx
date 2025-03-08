@@ -25,12 +25,12 @@ interface SplitMethodModalProps {
   participants?: Participant[]; // default fallback provided
 }
 
-const SplitMethodModal = ({
-  isOpen = true,
+const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
+  isOpen,
   onClose,
   totalAmount = 0,
   participants = [],
-}: SplitMethodModalProps) => {
+}) => {
   // --- STATE FOR EACH TAB’S SPLIT DATA ---
   const [equallyChecked, setEquallyChecked] = useState<boolean[]>(
     participants.map(() => true)
@@ -43,6 +43,12 @@ const SplitMethodModal = ({
   );
   const [shares, setShares] = useState<number[]>(participants.map(() => 1));
 
+  // --- SEARCH STATE for each tab ---
+  const [searchEqually, setSearchEqually] = useState("");
+  const [searchExact, setSearchExact] = useState("");
+  const [searchPercent, setSearchPercent] = useState("");
+  const [searchShares, setSearchShares] = useState("");
+
   // Reset state whenever the modal opens
   useEffect(() => {
     if (isOpen) {
@@ -50,6 +56,12 @@ const SplitMethodModal = ({
       setExactAmounts(participants.map(() => 0));
       setPercentages(participants.map(() => 0));
       setShares(participants.map(() => 1));
+
+      // Reset search fields as well
+      setSearchEqually("");
+      setSearchExact("");
+      setSearchPercent("");
+      setSearchShares("");
     }
   }, [participants, isOpen]);
 
@@ -80,11 +92,30 @@ const SplitMethodModal = ({
 
   // --- DERIVED DATA FOR EACH TAB ---
   const checkedCount = equallyChecked.filter(Boolean).length || 1;
-  const totalExact = exactAmounts.reduce((a, b) => a + b, 0);
-  const leftoverExact = totalAmount - totalExact;
+  const totalExactValue = exactAmounts.reduce((a, b) => a + b, 0);
+  const leftoverExact = totalAmount - totalExactValue;
   const totalPercent = percentages.reduce((a, b) => a + b, 0);
   const leftoverPercent = 100 - totalPercent;
   const totalShares = shares.reduce((a, b) => a + b, 0);
+
+  // Create a helper to get filtered participants (preserving original index)
+  const filterParticipants = (query: string) =>
+    participants
+      .map((p, i) => ({ p, i }))
+      .filter(({ p }) => p.name.toLowerCase().includes(query.toLowerCase()));
+
+  // --- "Select All / Deselect All" for Equally Tab ---
+  const filteredEqually = filterParticipants(searchEqually);
+  const allFilteredSelected = filteredEqually.every(
+    ({ i }) => equallyChecked[i]
+  );
+  const toggleSelectFiltered = () => {
+    setEquallyChecked((prev) => {
+      const copy = [...prev];
+      filteredEqually.forEach(({ i }) => (copy[i] = !allFilteredSelected));
+      return copy;
+    });
+  };
 
   const handleSaveAndClose = () => {
     // TODO: Add your custom logic for these splits.
@@ -93,7 +124,7 @@ const SplitMethodModal = ({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col max-h-[85vh] min-h-[85vh]">
+      <div className="flex flex-col max-h-[80vh] min-h-[80vh]">
         <TabGroup className="flex flex-col flex-1 min-h-0">
           <TabList className="mb-2 flex space-x-1 rounded-xl bg-gray-100 p-1">
             {["Split Equally", "Exact Amounts", "Percentage", "Shares"].map(
@@ -102,7 +133,7 @@ const SplitMethodModal = ({
                   key={tabName}
                   className={({ selected }) =>
                     classNames(
-                      "w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
+                      "flex justify-center w-full rounded-lg py-2.5 text-sm font-medium leading-5 text-gray-700",
                       "ring-white ring-opacity-60 ring-offset-2 ring-offset-gray-300 focus:outline-none focus:ring-2",
                       selected
                         ? "bg-white shadow"
@@ -110,17 +141,11 @@ const SplitMethodModal = ({
                     )
                   }
                 >
-                  {idx === 0 && (
-                    <EqualsIcon className="h-5 w-5 inline-block mr-2" />
-                  )}
-                  {idx === 1 && (
-                    <CalculatorIcon className="h-5 w-5 inline-block mr-2" />
-                  )}
-                  {idx === 2 && (
-                    <PercentBadgeIcon className="h-5 w-5 inline-block mr-2" />
-                  )}
+                  {idx === 0 && <EqualsIcon className="h-6 w-6" />}
+                  {idx === 1 && <CalculatorIcon className="h-6 w-6" />}
+                  {idx === 2 && <PercentBadgeIcon className="h-6 w-6" />}
                   {idx === 3 && (
-                    <AdjustmentsHorizontalIcon className="h-5 w-5 inline-block mr-2" />
+                    <AdjustmentsHorizontalIcon className="h-6 w-6" />
                   )}
                 </Tab>
               )
@@ -141,25 +166,40 @@ const SplitMethodModal = ({
                   Check who is included in splitting this total equally. The
                   cost for each checked participant is:
                 </p>
+                {/* Select All / Deselect All */}
+                <button
+                  onClick={toggleSelectFiltered}
+                  className="self-end text-sm font-medium text-indigo-600 hover:text-indigo-800"
+                >
+                  {allFilteredSelected ? "Deselect All" : "Select All"}
+                </button>
+                {/* Search Filter */}
+                <input
+                  type="text"
+                  placeholder="Search participants..."
+                  value={searchEqually}
+                  onChange={(e) => setSearchEqually(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
               </div>
               <div className="flex-1 min-h-0">
-                {participants.map((p, i) => {
+                {filterParticipants(searchEqually).map(({ p, i }) => {
                   const share = equallyChecked[i]
                     ? totalAmount / (checkedCount || 1)
                     : 0;
                   return (
                     <li
                       key={p.name + i}
-                      className="col-span-1 flex rounded-md shadow-sm mb-2"
+                      className="flex rounded-md shadow-sm mb-2 cursor-pointer"
                       onClick={() =>
                         handleEqualCheckChange(i, !equallyChecked[i])
                       }
                     >
                       <div className="flex flex-1 items-center justify-between truncate rounded-md border border-gray-200 bg-white">
                         <div className="flex-1 truncate px-4 py-2 text-sm">
-                          <a className="font-medium text-gray-900 hover:text-gray-600">
+                          <span className="font-medium text-gray-900 hover:text-gray-600">
                             {p.name}
-                          </a>
+                          </span>
                         </div>
                         <div className="flex pr-4 items-center space-x-3">
                           <span className="text-gray-600 text-sm">
@@ -197,29 +237,42 @@ const SplitMethodModal = ({
                 <p className="text-sm text-gray-700">
                   Enter exactly how much each participant will pay.
                 </p>
+                <input
+                  type="text"
+                  placeholder="Search participants..."
+                  value={searchExact}
+                  onChange={(e) => setSearchExact(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
               </div>
               <div className="flex-1 min-h-0">
-                {participants.map((p, i) => (
+                {filterParticipants(searchExact).map(({ p, i }) => (
                   <li
                     key={p.name + i}
-                    className="col-span-1 flex rounded-md shadow-sm mb-2"
+                    className="flex rounded-md shadow-sm mb-2"
                   >
                     <div className="flex flex-1 items-center justify-between rounded-md border border-gray-200 bg-white">
                       <div className="flex-1 truncate px-4 py-2 text-sm">
-                        <a className="font-medium text-gray-900 hover:text-gray-600">
+                        <span className="font-medium text-gray-900 hover:text-gray-600">
                           {p.name}
-                        </a>
+                        </span>
                       </div>
                       <div className="flex pr-2 items-center">
                         <input
                           id={`exact-${i}`}
                           type="number"
+                          inputMode="numeric"
                           step="0.01"
                           placeholder="0.00"
                           value={exactAmounts[i]}
                           onChange={(e) =>
                             handleExactChange(i, parseFloat(e.target.value))
                           }
+                          onFocus={() => {
+                            if (exactAmounts[i] === 0) {
+                              handleExactChange(i, NaN);
+                            }
+                          }}
                           className="my-1.5 py-1.5 w-28 rounded-md border-gray-300 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-right"
                         />
                       </div>
@@ -247,21 +300,28 @@ const SplitMethodModal = ({
                   Each participant’s share of 100%. Enter a percentage for each
                   person to see how much they pay in currency.
                 </p>
+                <input
+                  type="text"
+                  placeholder="Search participants..."
+                  value={searchPercent}
+                  onChange={(e) => setSearchPercent(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
               </div>
               <div className="flex-1 min-h-0">
-                {participants.map((p, i) => {
+                {filterParticipants(searchPercent).map(({ p, i }) => {
                   const percentVal = percentages[i];
                   const amountVal = (totalAmount * percentVal) / 100;
                   return (
                     <li
                       key={p.name + i}
-                      className="col-span-1 flex rounded-md shadow-sm mb-2"
+                      className="flex rounded-md shadow-sm mb-2"
                     >
                       <div className="flex flex-1 items-center justify-between rounded-md border border-gray-200 bg-white">
                         <div className="flex-1 truncate px-4 py-2 text-sm">
-                          <a className="font-medium text-gray-900 hover:text-gray-600">
+                          <span className="font-medium text-gray-900 hover:text-gray-600">
                             {p.name}
-                          </a>
+                          </span>
                         </div>
                         <div className="flex pr-3 items-center space-x-3">
                           <span className="text-gray-600 text-sm">
@@ -272,6 +332,7 @@ const SplitMethodModal = ({
                               id={`percent-${i}`}
                               type="number"
                               step="0.01"
+                              inputMode="numeric"
                               placeholder="0"
                               value={percentVal}
                               onChange={(e) =>
@@ -280,6 +341,11 @@ const SplitMethodModal = ({
                                   parseFloat(e.target.value)
                                 )
                               }
+                              onFocus={() => {
+                                if (percentages[i] === 0) {
+                                  handlePercentageChange(i, NaN);
+                                }
+                              }}
                               className="my-1.5 w-20 rounded-md border-gray-300 py-1.5 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-right"
                             />
                             <span className="text-sm text-gray-600">%</span>
@@ -305,9 +371,16 @@ const SplitMethodModal = ({
                   Each participant’s number of “shares.” The cost is split by
                   each person’s ratio of the total shares.
                 </p>
+                <input
+                  type="text"
+                  placeholder="Search participants..."
+                  value={searchShares}
+                  onChange={(e) => setSearchShares(e.target.value)}
+                  className="block w-full rounded-md border-gray-300 px-3 py-1.5 text-sm focus:ring-indigo-500 focus:border-indigo-500"
+                />
               </div>
               <div className="flex-1 min-h-0">
-                {participants.map((p, i) => {
+                {filterParticipants(searchShares).map(({ p, i }) => {
                   const userShares = shares[i];
                   const shareCost =
                     totalShares === 0
@@ -316,13 +389,13 @@ const SplitMethodModal = ({
                   return (
                     <li
                       key={p.name + i}
-                      className="col-span-1 flex rounded-md shadow-sm mb-2"
+                      className="flex rounded-md shadow-sm mb-2"
                     >
                       <div className="flex flex-1 items-center justify-between rounded-md border border-gray-200 bg-white">
                         <div className="flex-1 truncate px-4 py-2 text-sm">
-                          <a className="font-medium text-gray-900 hover:text-gray-600">
+                          <span className="font-medium text-gray-900 hover:text-gray-600">
                             {p.name}
-                          </a>
+                          </span>
                         </div>
                         <div className="flex items-center pr-3 space-x-3">
                           <span className="text-gray-600 text-sm">
@@ -332,11 +405,17 @@ const SplitMethodModal = ({
                             id={`share-${i}`}
                             type="number"
                             step="1"
+                            inputMode="numeric"
                             placeholder="0"
                             value={userShares}
                             onChange={(e) =>
                               handleSharesChange(i, parseFloat(e.target.value))
                             }
+                            onFocus={() => {
+                              if (shares[i] === 1) {
+                                handleSharesChange(i, NaN);
+                              }
+                            }}
                             className="my-1.5 w-20 rounded-md border-gray-300 py-1.5 text-sm shadow-sm focus:ring-indigo-500 focus:border-indigo-500 text-right"
                           />
                         </div>

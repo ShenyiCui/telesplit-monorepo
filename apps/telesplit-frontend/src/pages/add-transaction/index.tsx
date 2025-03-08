@@ -200,6 +200,7 @@ const AddTransaction = () => {
                 id="price"
                 name="price"
                 type="number"
+                inputMode="numeric"
                 step="0.01"
                 value={price}
                 onChange={(e) => setPrice(e.target.value)}
