@@ -89,8 +89,8 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
 
   const handleSharesChange = (index: number, value: number) => {
     const copy = [...shares];
-    // Guard: no negative shares, no NaN
-    copy[index] = isNaN(value) || value < 0 ? 0 : value;
+    // Guard: no negative shares
+    copy[index] = value < 0 ? 0 : value;
     setShares(copy);
   };
 

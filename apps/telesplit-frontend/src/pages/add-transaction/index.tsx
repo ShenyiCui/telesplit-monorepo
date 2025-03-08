@@ -6,7 +6,10 @@ import MultiSelect from "@frontend/src/components/multi-select";
 import { allCurrencies } from "../../../constants/currencies";
 import { BanknotesIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useLocalStorage } from "usehooks-ts";
-import SplitMethodModal from "./SplitMethodsModal"; // <-- The new modal
+import SplitMethodModal from "./SplitMethodsModal";
+import ToastContainer, {
+  ToastData,
+} from "@frontend/src/components/toast-container";
 
 const currencies: FilterSelectOptionData<string>[] = Object.keys(
   allCurrencies
@@ -17,6 +20,17 @@ const currencies: FilterSelectOptionData<string>[] = Object.keys(
 }));
 
 const AddTransaction = () => {
+  const [toasts, setToasts] = useState<ToastData[]>([]);
+
+  const addToast = (toast: Omit<ToastData, "id">) => {
+    const id = Date.now().toString();
+    setToasts((prev) => [...prev, { ...toast, id }]);
+  };
+
+  const removeToast = (id: string) => {
+    setToasts((prev) => prev.filter((t) => t.id !== id));
+  };
+
   const [isCurrencyFilterOpen, setIsCurrencyFilterOpen] = useState(false);
   const [currencyCode, setCurrencyCode] = useLocalStorage<string>(
     "currency",
@@ -57,6 +71,34 @@ const AddTransaction = () => {
   const setSelectedPayee = (payee: string) => {
     setPayee(payee);
     setIsPayeeFilterOpen(false);
+  };
+
+  const openSplitMethodModal = () => {
+    if (participants.length < 2) {
+      addToast({
+        type: "error",
+        message: "You need at least one other person to split with",
+      });
+      return;
+    }
+
+    if (parseFloat(price) <= 0) {
+      addToast({
+        type: "error",
+        message: "Please enter a valid price",
+      });
+      return;
+    }
+
+    if (parseFloat(price) === 0 || isNaN(parseFloat(price))) {
+      addToast({
+        type: "error",
+        message: "Price cannot be zero",
+      });
+      return;
+    }
+
+    setIsSplitMethodModalOpen(true);
   };
 
   return (
@@ -183,7 +225,7 @@ const AddTransaction = () => {
           <button
             type="button"
             className="rounded-sm bg-white px-2 py-1 text-xs font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
-            onClick={() => setIsSplitMethodModalOpen(true)}
+            onClick={openSplitMethodModal}
           >
             Equally
           </button>
@@ -219,6 +261,8 @@ const AddTransaction = () => {
         onClose={() => setIsPayeeFilterOpen(false)}
         data={allPayees}
       />
+
+      <ToastContainer position="top" toasts={toasts} onDismiss={removeToast} />
     </>
   );
 };
