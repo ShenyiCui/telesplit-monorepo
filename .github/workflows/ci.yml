@@ -23,8 +23,5 @@ jobs:
         run: node common/scripts/install-run-rush.js change --verify
       - name: Rush Install
         run: node common/scripts/install-run-rush.js install
-      - name: Update Browserslist
-        working-directory: apps/telesplit-frontend
-        run: npx update-browserslist-db@latest
       - name: Rush rebuild
         run: node common/scripts/install-run-rush.js rebuild --verbose
