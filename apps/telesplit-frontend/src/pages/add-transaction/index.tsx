@@ -55,7 +55,7 @@ const AddTransaction = () => {
     ...selectedPartipants.map((n) => ({ name: n })),
   ];
 
-  // We'll store the total transaction amount in state so the modal can see it
+  const [description, setDescription] = useState("");
   const [price, setPrice] = useState("");
 
   // For demonstrating the SplitMethodModal
@@ -94,6 +94,14 @@ const AddTransaction = () => {
       addToast({
         type: "error",
         message: "Price cannot be zero",
+      });
+      return;
+    }
+
+    if (description === "") {
+      addToast({
+        type: "error",
+        message: "Please enter a description",
       });
       return;
     }
@@ -168,6 +176,8 @@ const AddTransaction = () => {
           <div className="mt-0.5">
             <input
               required
+              value={description}
+              onChange={(e) => setDescription(e.target.value)}
               type="text"
               name="description"
               id="description"

@@ -1,17 +1,11 @@
 import React, { useEffect, useState } from "react";
+import { Tab, TabGroup, TabList, TabPanel, TabPanels } from "@headlessui/react";
 import {
-  Tab as HeadlessTab,
-  TabGroup,
-  TabList,
-  TabPanel,
-  TabPanels,
-} from "@headlessui/react";
-import {
-  CheckCircleIcon,
   EqualsIcon,
   CalculatorIcon,
   PercentBadgeIcon,
   AdjustmentsHorizontalIcon,
+  CheckCircleIcon,
 } from "@heroicons/react/24/outline";
 import Modal from "@frontend/src/components/modal";
 
@@ -27,38 +21,29 @@ interface Participant {
 interface SplitMethodModalProps {
   isOpen: boolean;
   onClose: () => void;
-  totalAmount: number;
-  participants: Participant[];
+  totalAmount?: number;
+  participants?: Participant[]; // default fallback provided
 }
 
-const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
-  isOpen,
+const SplitMethodModal = ({
+  isOpen = true,
   onClose,
-  totalAmount,
-  participants,
-}) => {
+  totalAmount = 0,
+  participants = [],
+}: SplitMethodModalProps) => {
   // --- STATE FOR EACH TAB’S SPLIT DATA ---
-
-  // 1) Split Equally: Which participants are included?
-  //    If “checked” is true, they share in the total equally.
   const [equallyChecked, setEquallyChecked] = useState<boolean[]>(
     participants.map(() => true)
   );
-
-  // 2) Split Exact Amounts: How much does each participant pay?
   const [exactAmounts, setExactAmounts] = useState<number[]>(
     participants.map(() => 0)
   );
-
-  // 3) Split By Percentage: Each participant’s % of the total.
   const [percentages, setPercentages] = useState<number[]>(
     participants.map(() => 0)
   );
-
-  // 4) Split By Shares: Each participant’s # of shares.
   const [shares, setShares] = useState<number[]>(participants.map(() => 1));
 
-  // Reset state whenever the modal opens, so each visit starts fresh
+  // Reset state whenever the modal opens
   useEffect(() => {
     if (isOpen) {
       setEquallyChecked(participants.map(() => true));
@@ -89,26 +74,20 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
 
   const handleSharesChange = (index: number, value: number) => {
     const copy = [...shares];
-    // Guard: no negative shares
     copy[index] = value < 0 ? 0 : value;
     setShares(copy);
   };
 
   // --- DERIVED DATA FOR EACH TAB ---
-  // 1) Equal split amounts
-  const checkedCount = equallyChecked.filter(Boolean).length || 1; // Avoid divide-by-zero
-  // 2) Exact amounts leftover
+  const checkedCount = equallyChecked.filter(Boolean).length || 1;
   const totalExact = exactAmounts.reduce((a, b) => a + b, 0);
   const leftoverExact = totalAmount - totalExact;
-  // 3) Percentage leftover
   const totalPercent = percentages.reduce((a, b) => a + b, 0);
   const leftoverPercent = 100 - totalPercent;
-  // 4) Shares total
   const totalShares = shares.reduce((a, b) => a + b, 0);
 
-  // Finalize or validate data, then close
   const handleSaveAndClose = () => {
-    // TODO: Add your custom logic for these splits
+    // TODO: Add your custom logic for these splits.
     onClose();
   };
 
@@ -119,7 +98,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
           <TabList className="mb-2 flex space-x-1 rounded-xl bg-gray-100 p-1">
             {["Split Equally", "Exact Amounts", "Percentage", "Shares"].map(
               (tabName, idx) => (
-                <HeadlessTab
+                <Tab
                   key={tabName}
                   className={({ selected }) =>
                     classNames(
@@ -143,7 +122,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
                   {idx === 3 && (
                     <AdjustmentsHorizontalIcon className="h-5 w-5 inline-block mr-2" />
                   )}
-                </HeadlessTab>
+                </Tab>
               )
             )}
           </TabList>
@@ -190,9 +169,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
                             id={`equal-${i}`}
                             type="checkbox"
                             checked={equallyChecked[i]}
-                            onChange={() => {
-                              /* no-op: click on li handles it */
-                            }}
+                            onChange={() => {}}
                             className="h-4 w-4 rounded border-gray-300 text-indigo-600 focus:ring-indigo-500"
                           />
                         </div>
@@ -221,7 +198,6 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
                   Enter exactly how much each participant will pay.
                 </p>
               </div>
-
               <div className="flex-1 min-h-0">
                 {participants.map((p, i) => (
                   <li
@@ -272,7 +248,6 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
                   person to see how much they pay in currency.
                 </p>
               </div>
-
               <div className="flex-1 min-h-0">
                 {participants.map((p, i) => {
                   const percentVal = percentages[i];
@@ -326,17 +301,14 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
                 <p className="text-sm text-gray-700">
                   Total shares used: <strong>{totalShares}</strong>
                 </p>
-
                 <p className="text-sm text-gray-700">
                   Each participant’s number of “shares.” The cost is split by
                   each person’s ratio of the total shares.
                 </p>
               </div>
-
               <div className="flex-1 min-h-0">
                 {participants.map((p, i) => {
                   const userShares = shares[i];
-                  // Avoid divide-by-zero with a guard
                   const shareCost =
                     totalShares === 0
                       ? 0

@@ -14,7 +14,7 @@ interface ModalProps {
 }
 const Modal = ({ children, isOpen, onClose }: ModalProps) => {
   return (
-    <Transition show={isOpen}>
+    <Transition show={isOpen} as={React.Fragment}>
       <Dialog className="relative z-10" onClose={onClose || (() => "")}>
         <TransitionChild
           enter="ease-out duration-300"
