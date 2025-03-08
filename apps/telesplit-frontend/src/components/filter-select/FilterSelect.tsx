@@ -69,7 +69,7 @@ function FilterSelect<T>({
 
   return (
     <Modal isOpen={isOpen} onClose={onClose}>
-      <div className="flex flex-col max-h-[80vh] min-h-[80vh] gap-y-3">
+      <div className="flex flex-col max-h-[85vh] min-h-[85vh] gap-y-3">
         <div className="w-full">
           <label className="block text-sm font-medium leading-6 text-gray-900">
             Search

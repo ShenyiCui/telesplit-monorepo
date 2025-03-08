@@ -7,6 +7,7 @@ import {
   TabPanels,
 } from "@headlessui/react";
 import {
+  CheckCircleIcon,
   EqualsIcon,
   CalculatorIcon,
   PercentBadgeIcon,
@@ -76,13 +77,13 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
 
   const handleExactChange = (index: number, value: number) => {
     const copy = [...exactAmounts];
-    copy[index] = isNaN(value) ? 0 : value;
+    copy[index] = value;
     setExactAmounts(copy);
   };
 
   const handlePercentageChange = (index: number, value: number) => {
     const copy = [...percentages];
-    copy[index] = isNaN(value) ? 0 : value;
+    copy[index] = value;
     setPercentages(copy);
   };
 
@@ -203,7 +204,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
             </TabPanel>
 
             {/* TAB 2: SPLIT EXACT AMOUNTS */}
-            <TabPanel className="flex flex-col flex-1 min-h-0 gay-y-2">
+            <TabPanel className="flex flex-col flex-1 min-h-0 gap-y-2">
               <div className="sticky top-0 bg-white pb-2 flex flex-col gap-y-2">
                 <p className="text-sm font-bold text-gray-600 text-center">
                   Exact Amounts
@@ -253,7 +254,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
             </TabPanel>
 
             {/* TAB 3: SPLIT BY PERCENTAGE */}
-            <TabPanel className="flex flex-col flex-1 min-h-0 gay-y-2">
+            <TabPanel className="flex flex-col flex-1 min-h-0 gap-y-2">
               <div className="sticky top-0 bg-white pb-2 flex flex-col gap-y-2">
                 <p className="text-sm font-bold text-gray-600 text-center">
                   Percentages
@@ -317,7 +318,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
             </TabPanel>
 
             {/* TAB 4: SPLIT BY SHARES */}
-            <TabPanel className="flex flex-col flex-1 min-h-0 gay-y-2">
+            <TabPanel className="flex flex-col flex-1 min-h-0 gap-y-2">
               <div className="sticky top-0 bg-white pb-2 flex flex-col gap-y-2">
                 <p className="text-sm font-bold text-gray-600 text-center">
                   Shares
@@ -390,7 +391,7 @@ const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
             onClick={handleSaveAndClose}
             className="inline-flex items-center rounded-md bg-indigo-600 px-4 py-2 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
           >
-            Save
+            Submit <CheckCircleIcon className="h-4 w-4 ml-1" />
           </button>
         </div>
       </div>

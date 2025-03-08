@@ -4,7 +4,7 @@ import FilterSelect, {
 } from "@frontend/src/components/filter-select";
 import MultiSelect from "@frontend/src/components/multi-select";
 import { allCurrencies } from "../../../constants/currencies";
-import { BanknotesIcon } from "@heroicons/react/24/outline";
+import { BanknotesIcon, CheckCircleIcon } from "@heroicons/react/24/outline";
 import { useLocalStorage } from "usehooks-ts";
 import SplitMethodModal from "./SplitMethodsModal"; // <-- The new modal
 
@@ -46,6 +46,18 @@ const AddTransaction = () => {
 
   // For demonstrating the SplitMethodModal
   const [isSplitMethodModalOpen, setIsSplitMethodModalOpen] = useState(false);
+
+  const [isPayeeFilterOpen, setIsPayeeFilterOpen] = useState(false);
+  const [payee, setPayee] = useState(participants[0].name);
+  const allPayees = [...participants.map((p) => p.name)].map((p) => ({
+    title: p,
+    subtitle: "",
+    value: p,
+  }));
+  const setSelectedPayee = (payee: string) => {
+    setPayee(payee);
+    setIsPayeeFilterOpen(false);
+  };
 
   return (
     <>
@@ -159,14 +171,15 @@ const AddTransaction = () => {
 
         {/** Launch the new SplitMethodModal by clicking this “Equally” button */}
         <div className="flex justify-center gap-x-2">
-          Split by{" "}
+          Paid by{" "}
           <button
+            onClick={() => setIsPayeeFilterOpen(true)}
             type="button"
             className="rounded-sm bg-white px-2 py-1 text-xs font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
           >
-            You
+            {payee}
           </button>
-          paid{" "}
+          split{" "}
           <button
             type="button"
             className="rounded-sm bg-white px-2 py-1 text-xs font-semibold text-gray-900 ring-1 shadow-xs ring-gray-300 ring-inset hover:bg-gray-50"
@@ -180,7 +193,9 @@ const AddTransaction = () => {
           type="submit"
           className="mt-5 inline-flex w-full items-center justify-center gap-x-2 rounded-md bg-indigo-600 px-3.5 py-2.5 text-sm font-semibold text-white shadow-sm hover:bg-indigo-500 focus-visible:outline focus-visible:outline-2 focus-visible:outline-offset-2 focus-visible:outline-indigo-600"
         >
-          Submit
+          <div className="flex items-center">
+            Submit <CheckCircleIcon className="h-4 w-4 ml-1" />
+          </div>
         </button>
       </form>
 
@@ -196,6 +211,13 @@ const AddTransaction = () => {
         onChange={setSelectedCurrency}
         onClose={() => setIsCurrencyFilterOpen(false)}
         data={currencies}
+      />
+
+      <FilterSelect
+        isOpen={isPayeeFilterOpen}
+        onChange={setSelectedPayee}
+        onClose={() => setIsPayeeFilterOpen(false)}
+        data={allPayees}
       />
     </>
   );
