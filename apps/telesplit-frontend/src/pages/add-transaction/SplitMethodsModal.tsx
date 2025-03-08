@@ -26,7 +26,7 @@ interface SplitMethodModalProps {
 }
 
 const SplitMethodModal: React.FC<SplitMethodModalProps> = ({
-  isOpen,
+  isOpen = true,
   onClose,
   totalAmount = 0,
   participants = [],
