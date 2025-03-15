@@ -28,7 +28,7 @@ const ModalSkeleton = () => (
 );
 
 const TotalsModal: React.FC<TotalsModalProps> = ({
-  isOpen,
+  isOpen = false,
   onClose,
   owe,
   owedToYou,

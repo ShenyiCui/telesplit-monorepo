@@ -21,10 +21,10 @@ interface SettleUpModalProps {
 }
 
 const SettleUpModal: React.FC<SettleUpModalProps> = ({
-  isOpen,
+  isOpen = false,
   onClose,
-  youOweOptions,
-  youAreOwedOptions,
+  youOweOptions = [],
+  youAreOwedOptions = [],
   onSave,
 }) => {
   const [selectedOwe, setSelectedOwe] = useState<SettlementOption | null>(null);

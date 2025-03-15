@@ -1,12 +1,14 @@
 import React, { useEffect, useState } from "react";
-import Link from "next/link";
 import { format, parseISO, compareDesc } from "date-fns";
 import TotalsModal, { TotalsDataItem } from "./TotalsModal";
 import SettleUpModal, { SettlementOption } from "./SettleUpModal";
 import TransactionDetailsModal, {
   Transaction,
 } from "./TransactionDetailsModal";
-import { groupInfo, dummyTransactions } from "./mock-data";
+import {
+  groupInfo,
+  dummyTransactions,
+} from "@frontend/constants/activity-mock-data";
 
 // Helper: Group transactions by month and year
 const groupTransactions = (txs: Transaction[]) => {
@@ -21,7 +23,7 @@ const groupTransactions = (txs: Transaction[]) => {
 
 const ActivityPage: React.FC = () => {
   const [transactions, setTransactions] = useState<Transaction[]>(
-    dummyTransactions as Transaction[]
+    (dummyTransactions || []) as Transaction[]
   );
   const [isTotalsModalOpen, setIsTotalsModalOpen] = useState(false);
   const [isSettleUpModalOpen, setIsSettleUpModalOpen] = useState(false);

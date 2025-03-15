@@ -27,10 +27,21 @@ interface TransactionDetailsModalProps {
   onDelete: (transactionId: string) => void;
 }
 
+const emptyTransaction: Transaction = {
+  id: "",
+  date: "2024-02-10",
+  description: "",
+  amount: 0,
+  currency: "",
+  involvement: "owed",
+  paidBy: "",
+  splits: [],
+};
+
 const TransactionDetailsModal: React.FC<TransactionDetailsModalProps> = ({
-  isOpen,
+  isOpen = false,
   onClose,
-  transaction,
+  transaction = emptyTransaction,
   onEdit,
   onDelete,
 }) => {
