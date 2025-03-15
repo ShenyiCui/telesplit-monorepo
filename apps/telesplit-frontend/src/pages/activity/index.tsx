@@ -21,10 +21,9 @@ const groupTransactions = (txs: Transaction[]) => {
   return groups;
 };
 
+const dt = (dummyTransactions || []) as Transaction[];
 const ActivityPage: React.FC = () => {
-  const [transactions, setTransactions] = useState<Transaction[]>(
-    (dummyTransactions || []) as Transaction[]
-  );
+  const [transactions, setTransactions] = useState<Transaction[]>(dt);
   const [isTotalsModalOpen, setIsTotalsModalOpen] = useState(false);
   const [isSettleUpModalOpen, setIsSettleUpModalOpen] = useState(false);
   const [loading, setLoading] = useState(true);
