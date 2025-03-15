@@ -1,0 +1,70 @@
+export const groupInfo = {
+  id: "group-1",
+  name: "Weekend Buddies",
+  type: "Group",
+};
+
+export const dummyTransactions = [
+  {
+    id: "1",
+    date: "2024-02-10",
+    description: "Dinner at Italian Bistro",
+    amount: 30,
+    currency: "USD",
+    involvement: "owed",
+    paidBy: "Alice",
+    splits: [
+      { name: "Alice", amount: 15 },
+      { name: "You", amount: 15 },
+    ],
+  },
+  {
+    id: "2",
+    date: "2024-01-20",
+    description: "Lunch at Cafe",
+    amount: 20,
+    currency: "USD",
+    involvement: "owedToYou",
+    paidBy: "You",
+    splits: [
+      { name: "You", amount: 10 },
+      { name: "Bob", amount: 10 },
+    ],
+  },
+  {
+    id: "3",
+    date: "2024-01-05",
+    description: "Movie Night",
+    amount: 15,
+    currency: "USD",
+    involvement: "notInvolved",
+    paidBy: "Bob",
+  },
+  {
+    id: "4",
+    date: "2023-12-15",
+    description: "Concert Tickets",
+    amount: 50,
+    currency: "USD",
+    involvement: "owed",
+    paidBy: "Charlie",
+  },
+  {
+    id: "5",
+    date: "2024-02-15",
+    description: "Coffee in Singapore",
+    amount: 10,
+    currency: "SGD",
+    involvement: "owed",
+    paidBy: "Darren",
+  },
+  {
+    id: "6",
+    date: "2024-02-20",
+    description: "Dinner in Singapore",
+    amount: 25,
+    currency: "SGD",
+    involvement: "owedToYou",
+    paidBy: "You",
+  },
+];
