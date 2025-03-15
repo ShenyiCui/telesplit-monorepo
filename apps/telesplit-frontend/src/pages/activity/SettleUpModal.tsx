@@ -109,9 +109,7 @@ const SettleUpModal: React.FC<SettleUpModalProps> = ({
                     <input
                       type="number"
                       value={oweAmount}
-                      onChange={(e) =>
-                        setOweAmount(parseFloat(e.target.value) || 0)
-                      }
+                      onChange={(e) => setOweAmount(parseFloat(e.target.value))}
                       className="mt-1 w-full rounded-md border border-red-300 px-3 py-2 text-sm focus:ring-red-500 focus:border-red-500"
                     />
                   )}
@@ -155,7 +153,7 @@ const SettleUpModal: React.FC<SettleUpModalProps> = ({
                       type="number"
                       value={owedAmount}
                       onChange={(e) =>
-                        setOwedAmount(parseFloat(e.target.value) || 0)
+                        setOwedAmount(parseFloat(e.target.value))
                       }
                       className="mt-1 w-full rounded-md border border-green-300 px-3 py-2 text-sm focus:ring-green-500 focus:border-green-500"
                     />

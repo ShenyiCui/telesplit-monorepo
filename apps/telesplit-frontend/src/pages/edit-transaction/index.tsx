@@ -112,7 +112,7 @@ const AddTransaction = () => {
   return (
     <>
       <div className="flex items-center justify-center py-4 bg-greenBg">
-        <h1 className="text-white text-xl font-light">Add Transaction</h1>
+        <h1 className="text-white text-xl font-light">Edit Transaction</h1>
       </div>
 
       <form
